@@ -1,0 +1,24 @@
+{
+  "name": "sass-example",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Oleh Sychov <sychovoleh@gmail.com>",
+  "license": "ISC",
+  "dependencies": {},
+  "devDependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-polyfill": "^6.23.0",
+    "babel-preset-env": "^1.6.0",
+    "gulp": "latest",
+    "gulp-autoprefixer": "^4.0.0",
+    "gulp-babel": "^7.0.0",
+    "gulp-concat": "latest",
+    "gulp-rigger": "latest",
+    "gulp-sass": "latest",
+    "jquery": "^3.2.1"
+  },
+  "description": ""
+}
