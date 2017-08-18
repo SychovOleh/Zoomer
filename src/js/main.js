@@ -45,7 +45,7 @@
       let fixedImgPositionLeft = (viewWidth - $(this.$img).width()) / 2;
       $('.fixed-img-wrap').css({ 'top': fixedImgPositionTop, 'left': fixedImgPositionLeft });
 
-      $(this.$img).animate({ opacity: 1 }, 300);
+      $(this.$img).animate({ opacity: 1 }, 250);
     }
 
     getRender() {
@@ -86,7 +86,7 @@
     }
 
     closeImg(target) {
-      $('.fixed-img-wrap').animate({ opacity: .1 }, 280).hide(0);
+      $('.fixed-img-wrap').animate({ opacity: .1 }, 250).hide(0);
     }
 
     resizeFixedImg() {

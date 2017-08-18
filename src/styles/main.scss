@@ -1,28 +1,28 @@
 @import "partial/reset.scss";
 $imgItemWidth: 156px;
-$imgsContainStartWidth: 236px;
+$imgsWrapStartWidth: 236px;
 body {
   background-image: url(../src/img/pattern.png);
 }
 
 .pane {
   width: $imgItemWidth;
-  @media all and(min-width: $imgsContainStartWidth + $imgItemWidth) {
+  @media all and(min-width: $imgsWrapStartWidth + $imgItemWidth) {
     width: $imgItemWidth*2;
   }
-  @media all and(min-width: $imgsContainStartWidth + ($imgItemWidth*2)) {
+  @media all and(min-width: $imgsWrapStartWidth + ($imgItemWidth*2)) {
     width: $imgItemWidth*3;
   }
-  @media all and(min-width: $imgsContainStartWidth + ($imgItemWidth*3)) {
+  @media all and(min-width: $imgsWrapStartWidth + ($imgItemWidth*3)) {
     width: $imgItemWidth*4;
   }
-  @media all and(min-width: $imgsContainStartWidth + ($imgItemWidth*4)) {
+  @media all and(min-width: $imgsWrapStartWidth + ($imgItemWidth*4)) {
     width: $imgItemWidth*5;
   }
-  @media all and(min-width: $imgsContainStartWidth + ($imgItemWidth*5)) {
+  @media all and(min-width: $imgsWrapStartWidth + ($imgItemWidth*5)) {
     width: $imgItemWidth*6;
   }
-  @media all and(min-width: $imgsContainStartWidth + ($imgItemWidth*6)) {
+  @media all and(min-width: $imgsWrapStartWidth + ($imgItemWidth*6)) {
     width: $imgItemWidth*7;
   }
 }
@@ -33,13 +33,12 @@ body {
 
 .pane {
   font-size: 0;
-  margin: 0 auto;
-  padding: 10px;
-  border-radius: 7px;
+  margin: 100px auto 0 auto;
+  padding: 20px;
+  border-radius: 9px;
   background-color: #101010;
   &__img {
     min-height: 90px;
-    // cursor: url(../src/img/cursors/zoom32.png), pointer;
     cursor: zoom-in;
     &-wrap {
       display: inline-block;
@@ -55,7 +54,6 @@ body {
   opacity: 1;
   position: relative;
   z-index: 999;
-  // cursor: url(../src/img/cursors/next32.png), pointer;
   cursor: pointer;
   &-wrap {
     font-size: 0;
@@ -67,7 +65,6 @@ body {
     width: 100%;
     top: 0;
     left: 0;
-    // cursor: url(../src/img/cursors/close64.png), pointer;
     cursor: zoom-out;
     background-image: url(../src/img/pattern.png);
     opacity: .9;
