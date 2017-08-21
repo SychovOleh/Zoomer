@@ -40,9 +40,14 @@
       } else {
         $(this.$img).css({ 'max-width': viewWidth * .86, 'height': 'auto' });
       }
+      // debugger
+      let fixedImgHorisontBorders = Number($(this.$img).css('border-right-width').replace('px', '')) +
+        Number($(this.$img).css('border-left-width').replace('px', ''));
+      let fixedImgVerticalBorders = Number($(this.$img).css('border-top-width').replace('px', '')) +
+        Number($(this.$img).css('border-bottom-width').replace('px', ''));
 
-      let fixedImgPositionTop = (viewHeght - $(this.$img).height()) / 2;
-      let fixedImgPositionLeft = (viewWidth - $(this.$img).width()) / 2;
+      let fixedImgPositionTop = (viewHeght - ($(this.$img).height() + fixedImgVerticalBorders)) / 2;
+      let fixedImgPositionLeft = (viewWidth - ($(this.$img).width() + fixedImgHorisontBorders)) / 2;
       $('.fixed-img-wrap').css({ 'top': fixedImgPositionTop, 'left': fixedImgPositionLeft });
 
       $(this.$img).animate({ opacity: 1 }, 300);

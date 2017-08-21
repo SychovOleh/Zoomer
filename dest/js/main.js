@@ -61,9 +61,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         } else {
           $(this.$img).css({ 'max-width': viewWidth * .86, 'height': 'auto' });
         }
+        // debugger
+        var fixedImgHorisontBorders = Number($(this.$img).css('border-right-width').replace('px', '')) + Number($(this.$img).css('border-left-width').replace('px', ''));
+        var fixedImgVerticalBorders = Number($(this.$img).css('border-top-width').replace('px', '')) + Number($(this.$img).css('border-bottom-width').replace('px', ''));
 
-        var fixedImgPositionTop = (viewHeght - $(this.$img).height()) / 2;
-        var fixedImgPositionLeft = (viewWidth - $(this.$img).width()) / 2;
+        var fixedImgPositionTop = (viewHeght - ($(this.$img).height() + fixedImgVerticalBorders)) / 2;
+        var fixedImgPositionLeft = (viewWidth - ($(this.$img).width() + fixedImgHorisontBorders)) / 2;
         $('.fixed-img-wrap').css({ 'top': fixedImgPositionTop, 'left': fixedImgPositionLeft });
 
         $(this.$img).animate({ opacity: 1 }, 300);

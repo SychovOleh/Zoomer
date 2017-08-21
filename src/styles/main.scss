@@ -26,6 +26,7 @@ body {
     width: $imgItemWidth*7;
   }
 }
+
 .container-of-all {
   margin: 30px;
   position: relative;
@@ -47,6 +48,7 @@ body {
       height: 90px;
       overflow: hidden;
       margin: 3px;
+      border-radius: 6px;
     }
   }
 }
@@ -57,6 +59,9 @@ body {
   z-index: 999;
   // cursor: url(../src/img/cursors/next32.png), pointer;
   cursor: pointer;
+  border-radius: 17px;
+  border: 4px solid whitesmoke;
+  box-sizing: border-box;
   &-wrap {
     font-size: 0;
     display: none;
