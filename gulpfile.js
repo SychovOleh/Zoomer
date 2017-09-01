@@ -13,14 +13,14 @@ gulp.task('sass', function() {
             browsers: ['last 7 versions'],
             cascade: false
         }))
-        .pipe(gulp.dest('./dest'))
+        .pipe(gulp.dest('./dist'))
 })
 
 gulp.task("build", function() {
     return gulp.src("./src/js/*.js")
       .pipe(babel({
       }))
-      .pipe(gulp.dest("./dest/js"));
+      .pipe(gulp.dest("./dist/js"));
   });
   
 gulp.task('default', function() {

@@ -1,75 +1,68 @@
 (function() {
-  const findImgIndex = (inputLink) => {
-    let linkToArr = inputLink.split('/');
-    return Number(linkToArr[linkToArr.length - 1].replace('.jpg', ''));
+  const zoomerBuildDom = (littleImgClass, nodeInsert = 'body') => {
+    let $backGround = $('<div></div>').addClass('zoom__img-back');
+    let $fixedImgWrap = $('<div></div>').append($backGround).addClass('zoom__img-wrap');
+    $(littleImgClass).each((i, el) => {
+      $(el).attr('data-id', i) // id to every little img
+        // let $imgW = $('<div></div>').addClass('zoom__img-wrap-in')
+      let srcForFixed = $(el).css('background-image').replace(/^\S*zoomer\//, '').replace('")', '');
+      let $item = $('<img>').addClass('zoom__img-item').attr('src', srcForFixed)
+        .attr('data-id-item', i) // id to every big img;
+        // $imgW.append($item);
+      $backGround.append($item);
+    })
+    $(nodeInsert).append($fixedImgWrap);
   }
 
   class Zoomer {
-    constructor(smallImgCol, fixedImgFolderName = 'fixed_img', nodeInsert = 'body') {
-      this.fixedImgFolderName = fixedImgFolderName;
-      this.nodeInsert = nodeInsert;
-      this._buildZoomerDom = this.buildDom();
+    constructor(smallImgCol) {
+      let _this = this;
+      this.oldIndex;
+      this.initSmallImgWidth()
       this.smallImgCol = smallImgCol;
-
       this._currentFixedImgIndex;
 
-      let _this = this;
-      $(smallImgCol).click(function() { _this.clickOpenFixedImg(this) });
-      $('.fixed-img').click(function() { _this.clickNextImg(this) });
-      $('.fixed-img-back').click(function() { _this.closeImg(this) });
-      $(window).resize(function() { _this.resizeFixedImg() });
+      this.viewHeght = $(window).height();
+      this.viewWidth = $(window).width();
+
+      this.zoomImgWrapMain = document.querySelector('.zoom__img-wrap');
+      this.zoomImgBack = document.querySelector('.zoom__img-back');
+      this.zoomImgsAll = document.querySelectorAll('.zoom__img-item');
+
+      this.initSizesAndPosFixedImgs()();
+
+      $(smallImgCol).click(function() { _this.clickOpenZoomImg(this) });
+      // $('.fixed-img').click(function() { _this.clickNextImg(this) });
+      // $('.fixed-img-back').click(function() { _this.closeImg(this) });
+      $(window).resize(function() { _this.onResize() });
     }
 
-    initPosition() {
-      let naturalHeight = $(this.$img)[0].naturalHeight;
-      let naturalWidth = $(this.$img)[0].naturalWidth;
-      $(this.$img).css({ 'max-height': naturalHeight, 'max-width': naturalWidth });
 
-      let viewHeght = $(window).height();
-      let viewWidth = $(window).width();
-      let fixedImgHeight = $(this.$img).height();
-      let fixedImgWidth = $(this.$img).width();
+    clickOpenZoomImg(target) {
+      let id = target.getAttribute('data-id');
+      let zoomImg = this.zoomImgBack.querySelector('[data-id-item="' + id + '"]');
 
-      let isHeight = false;
-      if (fixedImgHeight / viewHeght > fixedImgWidth / viewWidth) {
-        isHeight = true;
-      }
+      let zoomPos = zoomImg.getAttribute('data-point-start');
 
-      if (isHeight) {
-        $(this.$img).css({ 'max-height': viewHeght * .86, 'width': 'auto' });
-      } else {
-        $(this.$img).css({ 'max-width': viewWidth * .86, 'height': 'auto' });
-      }
-      // debugger
-      let fixedImgHorisontBorders = Number($(this.$img).css('border-right-width').replace('px', '')) +
-        Number($(this.$img).css('border-left-width').replace('px', ''));
-      let fixedImgVerticalBorders = Number($(this.$img).css('border-top-width').replace('px', '')) +
-        Number($(this.$img).css('border-bottom-width').replace('px', ''));
+      this.zoomImgWrapMain.style.display = 'block';
+      Array.prototype.forEach.call(this.zoomImgsAll, (el, i) => {
+        el.style.left = (0 - zoomPos) + 'px';
+      })
+      this.zoomImgBack.style.width = zoomImg.clientWidth - 1 + 'px';
 
-      let fixedImgPositionTop = (viewHeght - ($(this.$img).height() + fixedImgVerticalBorders)) / 2;
-      let fixedImgPositionLeft = (viewWidth - ($(this.$img).width() + fixedImgHorisontBorders)) / 2;
-      $('.fixed-img-wrap').css({ 'top': fixedImgPositionTop, 'left': fixedImgPositionLeft });
-
-      $(this.$img).animate({ opacity: 1 }, 300);
+      $('.zoom__img-wrap').
+      animate({
+        opacity: 1,
+      }, 400);
     }
 
-    getRender() {
-      return () => {
-        if (this.$img[0].complete) {
-          clearInterval(this.isImgRendered);
-          this.initPosition()
-        }
+    onResize() {
+      this.viewHeght = $(window).height();
+      this.viewWidth = $(window).width();
+      if ($('.fixed-img:visible').length > 0) {
+        // this.initSizeImg();
       }
-    }
-
-    clickOpenFixedImg(target) {
-      $('.fixed-img-wrap').css('opacity', '1').show(0);
-      let smallImgLink = $(target).attr('src');
-
-      this.fixedImgLink = smallImgLink.replace('150px', this.fixedImgFolderName);
-
-      $(this.$img).css('opacity', '0').attr('src', this.fixedImgLink);
-      this.isImgRendered = setInterval(this.getRender(), 0);
+      this.initSmallImgWidth();
     }
 
     clickNextImg(target) {
@@ -86,31 +79,97 @@
 
       let sourceOfNextImg = firstPartOfSource + nextFixedImgIndex + lastPartOfSource;
       $(target).css('opacity', '0').attr('src', sourceOfNextImg);
-
-      this.isImgRendered = setInterval(this.getRender(), 0);
     }
 
     closeImg(target) {
-      $('.fixed-img-wrap').animate({ opacity: .1 }, 280).hide(0);
-    }
-
-    resizeFixedImg() {
-      if ($('.fixed-img:visible').length > 0) {
-        this.initPosition();
+      let viewWidthNow = $(window).width();
+      // $('.fixed-img-wrap').animate({ opacity: .1 }, 280).hide(0);
+      if (viewWidthNow !== this.viewWidthNow) {
+        this.initSmallImgWidth();
       }
     }
 
-    buildDom() {
-      this.$img = $('<img></img>').addClass('fixed-img');
-      this.$backGround = $('<span></span>').addClass('fixed-img-back');
-      let fixedImgWrap = $('<span></span>').css({ 'position': 'fixed', 'z-index': '1000' })
-        .append(this.$backGround).append(this.$img).addClass('fixed-img-wrap');
-      $(this.nodeInsert).append(fixedImgWrap.get());
+    initSizeImg(zoomImg, isWrapPos = false) {
+      let naturalHeight = $(zoomImg)[0].naturalHeight;
+      let naturalWidth = $(zoomImg)[0].naturalWidth;
+      $(zoomImg).css({ 'max-height': naturalHeight, 'max-width': naturalWidth }); //didn't use
+
+      let zoomImgHeight = $(zoomImg).height();
+      let zoomImgWidth = $(zoomImg).width();
+
+      let isHeight = false;
+      if (zoomImgHeight / this.viewHeght > zoomImgWidth / this.viewWidth) {
+        isHeight = true;
+      }
+
+      if (isHeight) {
+        $(zoomImg).css({ 'height': this.viewHeght, 'width': 'auto' });
+      } else {
+        $(zoomImg).css({ 'width': this.viewWidth, 'height': 'auto' });
+      }
+
+      // if (isWrapPos) { // NEW
+      // this.viewWidthNow = $(window).width();
+      // let zoomImgPositionTop = (this.viewHeght - $(zoomImg).height()) / 2;
+      // let zoomImgPositionLeft = (this.viewWidth - $(zoomImg).width()) / 2;
+      // }
+      // $(zoomImg).animate({ opacity: 1 }, 300);
+    }
+    initSmallImgWidth() {
+      $('.pane__img-outside').each(function(i, el) {
+        $(el).find('.pane__img').css('height', $(el).css('padding-bottom'))
+      })
+    }
+    initSizesAndPosFixedImgs(isRecursion = false) {
+      return () => {
+        if (!isRecursion) {
+          this.items = Array.prototype.slice.call(document.querySelectorAll('.zoom__img-item'));
+          this.i = 0;
+          this.oldIndex = this.i;
+        }
+        while (this.i < this.items.length) {
+          if (this.i !== this.oldIndex) {
+            this.oldIndex = this.i;
+            clearInterval(this.sizingInterval)
+          }
+          this.getRender(this.items[this.i], true);
+          if (this.i === this.items.length) {
+            this.pointStart = 0;
+            this.giveZoomPos();
+            this.zoomImgWrapMain.style.opacity = '0';
+            this.zoomImgWrapMain.style.display = 'none'
+          }
+        }
+      }
+    }
+    giveZoomPos() {
+      $('.zoom__img-item').each((i, el) => {
+        $(el).attr('data-point-start', this.pointStart);
+        this.pointStart += $(el).width();
+      })
+    }
+    getRender(img, isStartInit) {
+      if (img.complete) {
+        if (!isStartInit) {
+          clearInterval(this.isImgRendered);
+        } else {
+          this.i += 1
+        }
+        this.initSizeImg(img);
+        return;
+      }
+      if (isStartInit) {
+        this.sizingInterval = setInterval(this.initSizesAndPosFixedImgs(true), 500)
+      }
     }
   }
+  window.zoomerBuildDom = zoomerBuildDom;
   window.Zoomer = Zoomer;
 })()
 
 $(function() {
-  let zoomer = new Zoomer($('.pane__img').get());
+  zoomerBuildDom(document.querySelectorAll('.pane__img'));
+  $(window).on('load', function() {
+    let zoomer = new Zoomer('.pane__img');
+  })
 })
