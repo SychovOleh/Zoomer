@@ -191,8 +191,7 @@ body,
   position: relative;
   top: 0;
   left: 0;
-  z-index: 3;
-  cursor: pointer; }
+  z-index: 3; }
 
 .zoom__img-back {
   margin: 0 auto;
@@ -220,3 +219,59 @@ body,
   height: 100%;
   width: 100%;
   background: black; }
+
+.flip {
+  position: absolute;
+  width: 30%;
+  height: 100%;
+  top: 0;
+  z-index: 4;
+  cursor: pointer; }
+  .flip:hover > .icon {
+    opacity: .6; }
+  .flip-pvev {
+    left: 0; }
+  .flip-next {
+    right: 0; }
+
+.icon {
+  display: inline-block;
+  width: 48px;
+  height: 48px;
+  position: absolute;
+  cursor: pointer; }
+  .icon-close {
+    width: 100px;
+    height: 100px;
+    top: 0;
+    left: 0;
+    text-align: center;
+    cursor: default;
+    z-index: 5; }
+    .icon-close-in {
+      position: static;
+      display: inline-block;
+      margin: 35.5px 0;
+      width: 29px;
+      height: 29px;
+      background: no-repeat url(img/icon/left-arrow.svg);
+      z-index: 6;
+      opacity: .7; }
+      .icon-close-in:hover {
+        opacity: 1; }
+  .icon-prev {
+    top: 50%;
+    left: 12%;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    background: no-repeat url(img/icon/icon-left.svg);
+    opacity: 0; }
+  .icon-next {
+    top: 50%;
+    right: 12%;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    background: no-repeat url(img/icon/icon-right.svg);
+    opacity: 0; }

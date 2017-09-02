@@ -9,7 +9,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     var nodeInsert = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'body';
 
     var $backGround = $('<div></div>').addClass('zoom__img-back');
-    var $fixedImgWrap = $('<div></div>').append($backGround).addClass('zoom__img-wrap');
+    var $closeIcon = $('<span></span>').addClass('icon-close icon').append($('<span></span>').addClass('icon-close-in icon'));
+    var $nextSlide = $('<div></div>').addClass('flip flip-next').append($('<span></span>').addClass('icon-next icon'));
+    var $prevSlide = $('<div></div>').addClass('flip flip-prev').append($('<span></span>').addClass('icon-prev icon'));
+    var $fixedImgWrap = $('<div></div>').addClass('zoom__img-wrap').append($backGround).append($closeIcon).append($nextSlide).append($prevSlide);
+
     $(littleImgClass).each(function (i, el) {
       $(el).attr('data-id', i); // id to every little img
       // let $imgW = $('<div></div>').addClass('zoom__img-wrap-in')
@@ -31,9 +35,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       this.smallImgCol = smallImgCol;
       this._currentFixedImgIndex;
 
-      this.viewHeght = $(window).height();
-      this.viewWidth = $(window).width();
-
+      // this.viewHeght = $(window).height();
+      // this.viewWidth = $(window).width();
       this.zoomImgWrapMain = document.querySelector('.zoom__img-wrap');
       this.zoomImgBack = document.querySelector('.zoom__img-back');
       this.zoomImgsAll = document.querySelectorAll('.zoom__img-item');
@@ -43,18 +46,70 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       $(smallImgCol).click(function () {
         _this.clickOpenZoomImg(this);
       });
-      // $('.fixed-img').click(function() { _this.clickNextImg(this) });
-      // $('.fixed-img-back').click(function() { _this.closeImg(this) });
+      $('.flip').click(function () {
+        _this.clickNextImg(this);
+      });
+      $('.icon-close-in').click(function () {
+        _this.closeImg(this);
+      });
       $(window).resize(function () {
         _this.onResize();
       });
     }
 
     _createClass(Zoomer, [{
+      key: 'clickNextImg',
+      value: function clickNextImg(target) {
+        $('.flip').css('display', 'block');
+
+        var nextIndex = void 0;
+        if (target.classList.contains('flip-next')) {
+          nextIndex = this._index + 1;
+        } else {
+          nextIndex = this._index - 1;
+        }
+
+        var nextSlide = this.zoomImgBack.querySelector('[data-id-item="' + nextIndex + '"]');
+        var zoomPos = nextSlide.getAttribute('data-point-start');
+
+        this._index = nextIndex;
+        if (nextIndex === this.zoomImgsAll.length - 1) {
+          document.querySelector('.flip-next').style.display = 'none';
+        } else if (nextIndex === 0) {
+          document.querySelector('.flip-prev').style.display = 'none';
+        }
+
+        $('.zoom__img-item:first').animate({
+          left: -zoomPos
+        }, {
+          duration: 400,
+          queue: false,
+          step: function step(now) {
+            $(".zoom__img-item:gt(0)").css("left", now);
+          }
+        });
+
+        $(this.zoomImgBack).animate({
+          width: nextSlide.clientWidth
+        }, {
+          duration: 400,
+          queue: false
+        });
+      }
+    }, {
       key: 'clickOpenZoomImg',
       value: function clickOpenZoomImg(target) {
-        var id = target.getAttribute('data-id');
-        var zoomImg = this.zoomImgBack.querySelector('[data-id-item="' + id + '"]');
+        this._index = Number(target.getAttribute('data-id'));
+
+        if (this._index === this.zoomImgsAll.length - 1) {
+          document.querySelector('.flip-next').style.display = 'none';
+        } else if (this._index === 0) {
+          document.querySelector('.flip-prev').style.display = 'none';
+        } else {
+          $('.flip').css('display', 'block');
+        }
+
+        var zoomImg = this.zoomImgBack.querySelector('[data-id-item="' + this._index + '"]');
 
         var zoomPos = zoomImg.getAttribute('data-point-start');
 
@@ -69,39 +124,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }, 400);
       }
     }, {
-      key: 'onResize',
-      value: function onResize() {
-        this.viewHeght = $(window).height();
-        this.viewWidth = $(window).width();
-        if ($('.fixed-img:visible').length > 0) {
-          // this.initSizeImg();
-        }
-        this.initSmallImgWidth();
-      }
-    }, {
-      key: 'clickNextImg',
-      value: function clickNextImg(target) {
-        var sourceOfThisImg = $('.fixed-img').attr('src');
-        this._currentFixedImgIndex = findImgIndex(sourceOfThisImg);
-        this._lastFixedImgIndex = this.smallImgCol.length;
-        var nextFixedImgIndex = void 0;
-        var firstPartOfSource = sourceOfThisImg.split(this._currentFixedImgIndex)[0];
-        var lastPartOfSource = sourceOfThisImg.split(this._currentFixedImgIndex)[1];
-
-        if (this._currentFixedImgIndex === this._lastFixedImgIndex) {
-          nextFixedImgIndex = 1;
-        } else {
-          nextFixedImgIndex = this._currentFixedImgIndex + 1;
-        }
-
-        var sourceOfNextImg = firstPartOfSource + nextFixedImgIndex + lastPartOfSource;
-        $(target).css('opacity', '0').attr('src', sourceOfNextImg);
-      }
-    }, {
       key: 'closeImg',
       value: function closeImg(target) {
         var viewWidthNow = $(window).width();
-        // $('.fixed-img-wrap').animate({ opacity: .1 }, 280).hide(0);
+        $('.zoom__img-wrap').animate({ opacity: 0 }, 280).hide(0);
         if (viewWidthNow !== this.viewWidthNow) {
           this.initSmallImgWidth();
         }
@@ -109,8 +135,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     }, {
       key: 'initSizeImg',
       value: function initSizeImg(zoomImg) {
-        var isWrapPos = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-
+        this.viewHeght = $(window).height();
+        this.viewWidth = $(window).width();
         var naturalHeight = $(zoomImg)[0].naturalHeight;
         var naturalWidth = $(zoomImg)[0].naturalWidth;
         $(zoomImg).css({ 'max-height': naturalHeight, 'max-width': naturalWidth }); //didn't use
@@ -128,27 +154,24 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         } else {
           $(zoomImg).css({ 'width': this.viewWidth, 'height': 'auto' });
         }
-
-        // if (isWrapPos) { // NEW
-        // this.viewWidthNow = $(window).width();
-        // let zoomImgPositionTop = (this.viewHeght - $(zoomImg).height()) / 2;
-        // let zoomImgPositionLeft = (this.viewWidth - $(zoomImg).width()) / 2;
-        // }
-        // $(zoomImg).animate({ opacity: 1 }, 300);
       }
     }, {
-      key: 'initSmallImgWidth',
-      value: function initSmallImgWidth() {
-        $('.pane__img-outside').each(function (i, el) {
-          $(el).find('.pane__img').css('height', $(el).css('padding-bottom'));
-        });
+      key: 'onResize',
+      value: function onResize() {
+        this.viewHeght = $(window).height();
+        this.viewWidth = $(window).width();
+        if ($('.zoom__img-wrap:visible').length > 0) {
+          this.initSizesAndPosFixedImgs(false, true)();
+          this.initSmallImgWidth();
+          return;
+        }
+        this.initSmallImgWidth();
+        this.initSizesAndPosFixedImgs(false, true)();
       }
     }, {
       key: 'initSizesAndPosFixedImgs',
-      value: function initSizesAndPosFixedImgs() {
+      value: function initSizesAndPosFixedImgs(isRecursion, isUseZoomer) {
         var _this2 = this;
-
-        var isRecursion = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
 
         return function () {
           if (!isRecursion) {
@@ -156,30 +179,43 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             _this2.i = 0;
             _this2.oldIndex = _this2.i;
           }
-          while (_this2.i < _this2.items.length) {
-            if (_this2.i !== _this2.oldIndex) {
-              _this2.oldIndex = _this2.i;
-              clearInterval(_this2.sizingInterval);
+
+          if (!isUseZoomer) {
+            while (_this2.i < _this2.items.length) {
+              if (_this2.i !== _this2.oldIndex) {
+                _this2.oldIndex = _this2.i;
+                clearInterval(_this2.sizingInterval);
+              }
+              _this2.getRender(_this2.items[_this2.i], true);
+              if (_this2.i === _this2.items.length) {
+                _this2.pointStart = 0;
+                _this2.giveZoomPos();
+                _this2.zoomImgWrapMain.style.opacity = '0';
+                _this2.zoomImgWrapMain.style.display = 'none';
+                return;
+              }
             }
-            _this2.getRender(_this2.items[_this2.i], true);
-            if (_this2.i === _this2.items.length) {
-              _this2.pointStart = 0;
-              _this2.giveZoomPos();
-              _this2.zoomImgWrapMain.style.opacity = '0';
-              _this2.zoomImgWrapMain.style.display = 'none';
-            }
+          }
+
+          for (var i = 0; i < _this2.zoomImgsAll.length; i += 1) {
+            _this2.initSizeImg(_this2.zoomImgsAll[i]);
+            _this2.giveZoomPos();
           }
         };
       }
     }, {
       key: 'giveZoomPos',
-      value: function giveZoomPos() {
+      value: function giveZoomPos(oneEl) {
         var _this3 = this;
 
-        $('.zoom__img-item').each(function (i, el) {
-          $(el).attr('data-point-start', _this3.pointStart);
-          _this3.pointStart += $(el).width();
-        });
+        if (!oneEl) {
+          $('.zoom__img-item').each(function (i, el) {
+            $(el).attr('data-point-start', _this3.pointStart);
+            _this3.pointStart += $(el).width();
+          });
+          return;
+        }
+        $(oneEl).attr('data-point-start', this.pointStart);
       }
     }, {
       key: 'getRender',
@@ -196,6 +232,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         if (isStartInit) {
           this.sizingInterval = setInterval(this.initSizesAndPosFixedImgs(true), 500);
         }
+      }
+    }, {
+      key: 'initSmallImgWidth',
+      value: function initSmallImgWidth() {
+        $('.pane__img-outside').each(function (i, el) {
+          $(el).find('.pane__img').css('height', $(el).css('padding-bottom'));
+        });
       }
     }]);
 
