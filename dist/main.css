@@ -126,9 +126,7 @@ table {
   display: none; }
 
 html,
-body,
-.container-of-all,
-.pane {
+body {
   height: 100%; }
 
 .container-of-all {
@@ -207,8 +205,14 @@ body,
   -ms-flex-align: center;
   align-items: center;
   overflow: hidden; }
+  .zoom__img-back-wrap {
+    margin: auto; }
 
 .zoom__img-wrap {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
   opacity: 0;
   font-size: 0;
   position: fixed;

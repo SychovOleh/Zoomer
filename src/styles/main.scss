@@ -1,10 +1,6 @@
 @import "partial/reset.scss";
-// $imgItemWidth: 156px;
-// $imgsWrapStartWidth: 236px;
 html,
-body,
-.container-of-all,
-.pane {
+body {
   height: 100%;
 }
 
@@ -54,6 +50,7 @@ body,
     top: 0;
     left: 0;
     z-index: 3;
+    // display: none;
   }
   &-back {
     margin: 0 auto;
@@ -63,8 +60,12 @@ body,
     display: flex;
     align-items: center;
     overflow: hidden;
+    &-wrap {
+      margin: auto;
+    }
   }
   &-wrap {
+    display: flex;
     opacity: 0;
     font-size: 0;
     position: fixed;
