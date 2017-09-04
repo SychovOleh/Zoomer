@@ -47,10 +47,11 @@ body {
 .zoom__img {
   &-item {
     position: relative;
+    // opacity: 0;
     top: 0;
     left: 0;
     z-index: 3;
-    // display: none;
+    display: none;
   }
   &-back {
     margin: 0 auto;
@@ -84,7 +85,7 @@ body {
   width: 30%;
   height: 100%;
   top: 0;
-  z-index: 4;
+  z-index: 5;
   cursor: pointer;
   &:hover>.icon {
     opacity: .6;
@@ -110,7 +111,7 @@ body {
     left: 0;
     text-align: center;
     cursor: default;
-    z-index: 5;
+    z-index: 6;
     &-in {
       position: static;
       display: inline-block;
@@ -118,7 +119,7 @@ body {
       width: 29px;
       height: 29px;
       background: no-repeat url(img/icon/left-arrow.svg);
-      z-index: 6;
+      z-index: 7;
       opacity: .7;
       &:hover {
         opacity: 1;
@@ -139,4 +140,10 @@ body {
     background: no-repeat url(img/icon/icon-right.svg);
     opacity: 0;
   }
+}
+
+.fictive {
+  display: none;
+  z-index: 3;
+  left: 0;
 }
