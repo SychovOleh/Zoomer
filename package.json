@@ -1,5 +1,5 @@
 {
-  "name": "sass-example",
+  "name": "zoomer",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
@@ -10,14 +10,11 @@
   "dependencies": {},
   "devDependencies": {
     "babel-cli": "^6.24.1",
-    "babel-polyfill": "^6.23.0",
     "babel-preset-env": "^1.6.0",
-    "gulp": "latest",
+    "gulp": "^3.9.1",
     "gulp-autoprefixer": "^4.0.0",
     "gulp-babel": "^7.0.0",
-    "gulp-concat": "latest",
-    "gulp-rigger": "latest",
-    "gulp-sass": "latest",
+    "gulp-sass": "^3.1.0",
     "jquery": "^3.2.1"
   },
   "description": ""

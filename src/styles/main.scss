@@ -1,10 +1,10 @@
 @import "partial/reset.scss";
-$imgItemWidth: 156px;
-$imgsContainStartWidth: 236px;
+html,
 body {
-  background-image: url(../src/img/pattern.png);
+  height: 100%;
 }
 
+<<<<<<< HEAD
 .pane {
   width: $imgItemWidth;
   @media all and(min-width: $imgsContainStartWidth + $imgItemWidth) {
@@ -27,32 +27,66 @@ body {
   }
 }
 
+=======
+>>>>>>> master
 .container-of-all {
-  margin: 30px;
-  position: relative;
+  padding: 30px 0;
 }
 
 .pane {
+<<<<<<< HEAD
   font-size: 0;
   margin: 100px auto 0 auto;
   padding: 20px;
   border-radius: 9px;
   background-color: #101010;
+=======
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 90%;
+  margin: 0 auto;
+>>>>>>> master
   &__img {
-    min-height: 90px;
-    // cursor: url(../src/img/cursors/zoom32.png), pointer;
-    cursor: zoom-in;
+    width: 100%;
+    background: no-repeat;
+    background-size: cover;
+    transition: box-shadow 0.2s linear;
+    position: absolute;
+    &:hover {
+      box-shadow: inset 0px 0px 60px 10px rgba(0, 0, 0, .6)
+    }
+    &-outside {
+      box-sizing: border-box;
+      padding-bottom: 56.26%;
+      position: relative;
+    }
     &-wrap {
+<<<<<<< HEAD
       display: inline-block;
       width: 150px;
       height: 90px;
       overflow: hidden;
       margin: 3px;
       border-radius: 6px;
+=======
+      flex-basis: 100%;
+      margin: 7px;
+      @media all and(min-width: 768px) {
+        flex-basis: 47%;
+      }
+      @media all and(min-width: 1200px) {
+        flex-basis: 32%;
+      }
+      @media all and(min-width: 1700px) {
+        flex-basis: 489px;
+      }
+>>>>>>> master
     }
   }
 }
 
+<<<<<<< HEAD
 .fixed-img {
   opacity: 1;
   position: relative;
@@ -64,21 +98,109 @@ body {
   box-sizing: border-box;
   &-wrap {
     font-size: 0;
+=======
+.zoom__img {
+  &-item {
+    position: relative;
+    // opacity: 0;
+    top: 0;
+    left: 0;
+    z-index: 3;
+>>>>>>> master
     display: none;
   }
   &-back {
-    position: fixed;
-    height: 100%;
-    width: 100%;
-    top: 0;
-    left: 0;
-    // cursor: url(../src/img/cursors/close64.png), pointer;
-    cursor: zoom-out;
-    background-image: url(../src/img/pattern.png);
-    opacity: .9;
-    // transition: linear .1s;
-    &:hover {
-      opacity: .7;
+    margin: 0 auto;
+    font-size: 0;
+    max-width: 100%;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    &-wrap {
+      margin: auto;
     }
   }
+  &-wrap {
+    display: none;
+    opacity: 0;
+    font-size: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    font-size: 0;
+    z-index: 1;
+    height: 100%;
+    width: 100%;
+    background: black;
+  }
+}
+
+.flip {
+  position: absolute;
+  width: 30%;
+  height: 100%;
+  top: 0;
+  z-index: 5;
+  cursor: pointer;
+  &:hover>.icon {
+    opacity: .6;
+  }
+  &-pvev {
+    left: 0;
+  }
+  &-next {
+    right: 0;
+  }
+}
+
+.icon {
+  display: inline-block;
+  width: 48px;
+  height: 48px;
+  position: absolute;
+  cursor: pointer;
+  &-close {
+    width: 100px;
+    height: 100px;
+    top: 0;
+    left: 0;
+    text-align: center;
+    cursor: default;
+    z-index: 6;
+    &-in {
+      position: static;
+      display: inline-block;
+      margin: 35.5px 0;
+      width: 29px;
+      height: 29px;
+      background: no-repeat url(img/icon/left-arrow.svg);
+      z-index: 7;
+      opacity: .7;
+      &:hover {
+        opacity: 1;
+      }
+    }
+  }
+  &-prev {
+    top: 50%;
+    left: 12%;
+    transform: translateY(-50%);
+    background: no-repeat url(img/icon/icon-left.svg);
+    opacity: 0;
+  }
+  &-next {
+    top: 50%;
+    right: 12%;
+    transform: translateY(-50%);
+    background: no-repeat url(img/icon/icon-right.svg);
+    opacity: 0;
+  }
+}
+
+.fictive {
+  display: none;
+  z-index: 3;
+  left: 0;
 }
