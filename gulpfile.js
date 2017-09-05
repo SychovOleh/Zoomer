@@ -7,23 +7,24 @@ const babel = require("gulp-babel");
 
 
 gulp.task('sass', function() {
-    return gulp.src('./src/styles/main.scss')
-        .pipe(sass().on('error', sass.logError))
-        .pipe(autoprefixer({
-            browsers: ['last 7 versions'],
-            cascade: false
-        }))
-        .pipe(gulp.dest('./dist'))
+  return gulp.src('./src/styles/main.scss')
+    .pipe(sass().on('error', sass.logError))
+    .pipe(autoprefixer({
+      browsers: ['last 7 versions'],
+      cascade: false
+    }))
+    .pipe(gulp.dest('./dist'))
 })
 
 gulp.task("build", function() {
-    return gulp.src("./src/js/*.js")
-      .pipe(babel({
-      }))
-      .pipe(gulp.dest("./dist/js"));
-  });
-  
+  return gulp.src("./src/js/*.js")
+    .pipe(babel({
+      "presets": ["env"]
+    }))
+    .pipe(gulp.dest("./dist/js"));
+});
+
 gulp.task('default', function() {
-    gulp.watch('./src/styles/**/*.scss', ['sass']);
-    gulp.watch('./src/js/**/*.js', ['build']);
+  gulp.watch('./src/styles/**/*.scss', ['sass']);
+  gulp.watch('./src/js/**/*.js', ['build']);
 });
