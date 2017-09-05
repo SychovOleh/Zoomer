@@ -4,49 +4,16 @@ body {
   height: 100%;
 }
 
-<<<<<<< HEAD
-.pane {
-  width: $imgItemWidth;
-  @media all and(min-width: $imgsContainStartWidth + $imgItemWidth) {
-    width: $imgItemWidth*2;
-  }
-  @media all and(min-width: $imgsContainStartWidth + ($imgItemWidth*2)) {
-    width: $imgItemWidth*3;
-  }
-  @media all and(min-width: $imgsContainStartWidth + ($imgItemWidth*3)) {
-    width: $imgItemWidth*4;
-  }
-  @media all and(min-width: $imgsContainStartWidth + ($imgItemWidth*4)) {
-    width: $imgItemWidth*5;
-  }
-  @media all and(min-width: $imgsContainStartWidth + ($imgItemWidth*5)) {
-    width: $imgItemWidth*6;
-  }
-  @media all and(min-width: $imgsContainStartWidth + ($imgItemWidth*6)) {
-    width: $imgItemWidth*7;
-  }
-}
-
-=======
->>>>>>> master
 .container-of-all {
   padding: 30px 0;
 }
 
 .pane {
-<<<<<<< HEAD
-  font-size: 0;
-  margin: 100px auto 0 auto;
-  padding: 20px;
-  border-radius: 9px;
-  background-color: #101010;
-=======
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   max-width: 90%;
   margin: 0 auto;
->>>>>>> master
   &__img {
     width: 100%;
     background: no-repeat;
@@ -62,14 +29,6 @@ body {
       position: relative;
     }
     &-wrap {
-<<<<<<< HEAD
-      display: inline-block;
-      width: 150px;
-      height: 90px;
-      overflow: hidden;
-      margin: 3px;
-      border-radius: 6px;
-=======
       flex-basis: 100%;
       margin: 7px;
       @media all and(min-width: 768px) {
@@ -81,24 +40,10 @@ body {
       @media all and(min-width: 1700px) {
         flex-basis: 489px;
       }
->>>>>>> master
     }
   }
 }
 
-<<<<<<< HEAD
-.fixed-img {
-  opacity: 1;
-  position: relative;
-  z-index: 999;
-  // cursor: url(../src/img/cursors/next32.png), pointer;
-  cursor: pointer;
-  border-radius: 17px;
-  border: 4px solid whitesmoke;
-  box-sizing: border-box;
-  &-wrap {
-    font-size: 0;
-=======
 .zoom__img {
   &-item {
     position: relative;
@@ -106,7 +51,6 @@ body {
     top: 0;
     left: 0;
     z-index: 3;
->>>>>>> master
     display: none;
   }
   &-back {

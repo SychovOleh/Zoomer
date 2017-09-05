@@ -81,17 +81,6 @@
       } else {
         $(zoomImg).css({ 'width': this.viewWidth, 'height': 'auto' });
       }
-<<<<<<< HEAD
-      // debugger
-      let fixedImgHorisontBorders = Number($(this.$img).css('border-right-width').replace('px', '')) +
-        Number($(this.$img).css('border-left-width').replace('px', ''));
-      let fixedImgVerticalBorders = Number($(this.$img).css('border-top-width').replace('px', '')) +
-        Number($(this.$img).css('border-bottom-width').replace('px', ''));
-
-      let fixedImgPositionTop = (viewHeght - ($(this.$img).height() + fixedImgVerticalBorders)) / 2;
-      let fixedImgPositionLeft = (viewWidth - ($(this.$img).width() + fixedImgHorisontBorders)) / 2;
-      $('.fixed-img-wrap').css({ 'top': fixedImgPositionTop, 'left': fixedImgPositionLeft });
-=======
 
       if (!isInitDom && this.isZoomerVisible) { // !!!!!!!!!!
         this.zoomImgBack.style.width = zoomImg.clientWidth - 1 + 'px';
@@ -130,7 +119,6 @@
       this.initSizeImg(this.curSlide)
 
       this.prevSlide = this.curSlide;
->>>>>>> master
 
       if (isNextSlide) {
         this.goNextSlide();
