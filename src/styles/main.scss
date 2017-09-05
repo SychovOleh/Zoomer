@@ -60,13 +60,14 @@ body {
     z-index: 2;
     display: flex;
     align-items: center;
+    justify-content: center;
     overflow: hidden;
     &-wrap {
       margin: auto;
     }
   }
   &-wrap {
-    display: flex;
+    display: none;
     opacity: 0;
     font-size: 0;
     position: fixed;

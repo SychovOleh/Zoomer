@@ -205,15 +205,16 @@ body {
   -webkit-align-items: center;
   -ms-flex-align: center;
   align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
   overflow: hidden; }
   .zoom__img-back-wrap {
     margin: auto; }
 
 .zoom__img-wrap {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
+  display: none;
   opacity: 0;
   font-size: 0;
   position: fixed;
