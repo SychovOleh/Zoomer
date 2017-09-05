@@ -6,7 +6,7 @@
     let $closeIcon = $('<span></span>').addClass('icon-close icon').append($('<span></span>').addClass('icon-close-in icon'));
     let $nextSlide = $('<div></div>').addClass('flip flip-next').append($('<span></span>').addClass('icon-next icon'));
     let $prevSlide = $('<div></div>').addClass('flip flip-prev').append($('<span></span>').addClass('icon-prev icon'));
-    let $fixedImgWrap = $('<div></div>').addClass('zoom__img-wrap').append($backGroundWrap).append($closeIcon).append($nextSlide).append($prevSlide);
+    let $fixedImgWrap = $('<section></section>').addClass('zoom__img-wrap').append($backGroundWrap).append($closeIcon).append($nextSlide).append($prevSlide);
 
     $(littleImgClass).each((i, el) => {
       $(el).attr('data-id', i); // id to every little img
@@ -297,9 +297,17 @@
 })();
 
 $(function () {
+  // PRELOADER
+  // setTimeout(function() {
+  //   $('body').addClass('loaded');
+  // }, 3000);
+  // PRELOADER
+  // 
+  // 
   zoomerBuildDom(document.querySelectorAll('.pane__img'));
   $(window).on('load', function () {
     let zoomer = new Zoomer('.pane__img');
     window.zoomer = zoomer;
+    $('body').addClass('loaded');
   });
 });
