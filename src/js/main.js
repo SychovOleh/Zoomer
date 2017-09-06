@@ -110,7 +110,13 @@
       if (!mobileAndTabletcheck()) {
         $('.flip').click(function() { _this.clickNextImg(this) })
       } else {
+<<<<<<< HEAD
         swipedetect(this.zoomImgWrapMain, this.clickNextImg)
+=======
+        swipedetect(this.zoomImgWrapMain, function() {
+          debugger
+        })
+>>>>>>> gh-pages
       }
     }
 
