@@ -5,7 +5,6 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 (function () {
-
   var mobileAndTabletcheck = function mobileAndTabletcheck() {
     //https://stackoverflow.com/questions/11381673/detecting-a-mobile-browser
     var check = false;
@@ -32,8 +31,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       var $item = $('<img>').addClass('zoom__img-item').attr('src', srcForFixed).attr('data-id-item', i); // id to every big img;
       $backGround.append($item);
     });
-
-    $(nodeInsert).append($fixedImgWrap);
+    document.querySelector('body').appendChild($fixedImgWrap[0]);
   };
 
   var swipedetect = function swipedetect(el, callback) {
