@@ -110,7 +110,7 @@
       if (!mobileAndTabletcheck()) {
         $('.flip').click(function() { _this.clickNextImg(this) })
       } else {
-        swipedetect(this.zoomImgWrapMain, this.clickNextImg())
+        swipedetect(this.zoomImgWrapMain, this.clickNextImg)
       }
     }
 
@@ -138,7 +138,6 @@
       } else if (swipedir === 'right') {
         this.nextIndex = this._index - 1;
       }
-
 
       this.curSlide = this.zoomImgBack.querySelector('[data-id-item="' + this._index + '"]');
       this.nextSlide = this.zoomImgBack.querySelector('[data-id-item="' + this.nextIndex + '"]');
