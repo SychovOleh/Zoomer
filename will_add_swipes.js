@@ -25,6 +25,11 @@
     document.querySelector('body').appendChild($fixedImgWrap[0])
   }
 
+  // return swipedetect(this.zoomImgWrapMain, function(swipedir) {
+  //   // swipedir contains either "none", "left", "right", "top", or "down"
+  //   return swipedir
+  // })
+
   const scroll = {
     disableScroll() {
       if ($(document).height() > $(window).height()) {
@@ -48,7 +53,6 @@
       this._currentFixedImgIndex;
       this.swipe;
       this.isSlideLeafing = false;
-      this.isMobile = mobileAndTabletcheck();
 
       this.zoomImgWrapMain = document.querySelector('.zoom__img-wrap');
       this.zoomImgBack = document.querySelector('.zoom__img-back');
@@ -60,26 +64,82 @@
       $(smallImgCol).click(function() { _this.clickOpenZoomImg(this) });
       $('.icon-close-in').click(function() { _this.closeImg(this) });
       $(window).resize(function() { _this.onResize() });
-      $('.flip').click(function() { _this.clickNextImg(this) })
+      if (!mobileAndTabletcheck()) {
+        $('.flip').click(function() { _this.clickNextImg(this) })
+      } else {
+        this.swipedetect(this.zoomImgWrapMain)
+      }
+    }
+
+    swipedetect(el, callback) { //www.javascriptkit.com/javatutors/touchevents2.shtml
+      let touchsurface = el,
+        swipedir,
+        startX,
+        startY,
+        distX,
+        distY,
+        threshold = 150, //required min distance traveled to be considered swipe
+        restraint = 100, // maximum distance allowed at the same time in perpendicular direction
+        allowedTime = 300, // maximum time allowed to travel that distance
+        elapsedTime,
+        startTime;
+      // handleswipe = callback || function(swipedir) {};
+
+      touchsurface.addEventListener('touchstart', function(e) {
+        let touchobj = e.changedTouches[0]
+        swipedir = 'none'
+        dist = 0
+        startX = touchobj.pageX
+        startY = touchobj.pageY
+        startTime = new Date().getTime() // record time when finger first makes contact with surface
+        e.preventDefault()
+      }, false)
+
+      touchsurface.addEventListener('touchmove', function(e) {
+        e.preventDefault() // prevent scrolling when inside DIV
+      }, false)
+
+      touchsurface.addEventListener('touchend', function(e) {
+        let touchobj = e.changedTouches[0]
+        distX = touchobj.pageX - startX // get horizontal dist traveled by finger while in contact with surface
+        distY = touchobj.pageY - startY // get vertical dist traveled by finger while in contact with surface
+        elapsedTime = new Date().getTime() - startTime // get time elapsed
+        if (elapsedTime <= allowedTime) { // first condition for awipe met
+          if (Math.abs(distX) >= threshold && Math.abs(distY) <= restraint) { // 2nd condition for horizontal swipe met
+            swipedir = (distX < 0) ? 'left' : 'right' // if dist traveled is negative, it indicates left swipe
+          } else if (Math.abs(distY) >= threshold && Math.abs(distX) <= restraint) { // 2nd condition for vertical swipe met
+            swipedir = (distY < 0) ? 'up' : 'down' // if dist traveled is negative, it indicates up swipe
+          }
+        }
+        // handleswipe(swipedir)
+        e.preventDefault()
+        return this.swipe = swipedir;
+      }, false)
     }
 
     clickNextImg(target) {
       this.isPrevSlideRendered()
 
-      if (!this.isMobile) {
+      if (!mobileAndTabletcheck()) {
         $('.flip').css('display', 'block');
       }
 
       this.nextIndex;
       let isNextSlide = false;
 
-      if (!this.isMobile) {
+      if (!mobileAndTabletcheck()) {
         if (target.classList.contains('flip-next')) {
           this.nextIndex = this._index + 1;
           isNextSlide = true;
         } else {
           this.nextIndex = this._index - 1;
         }
+
+        // } else if (swipedir === 'left') {
+        //   this.nextIndex = this._index + 1;
+        //   isNextSlide = true;
+        // } else if (swipedir === 'right') {
+        //   this.nextIndex = this._index - 1;
       }
 
       this.curSlide = this.zoomImgBack.querySelector('[data-id-item="' + this._index + '"]');
@@ -90,7 +150,7 @@
 
       this._index = this.nextIndex;
 
-      if (!this.isMobile) {
+      if (!mobileAndTabletcheck()) {
         if (this.nextIndex === this.zoomImgsAll.length - 1) {
           document.querySelector('.flip-next').style.display = 'none';
         } else if (this.nextIndex === 0) {
@@ -198,7 +258,7 @@
         }
       }
 
-      if (!this.isMobile) {
+      if (!mobileAndTabletcheck()) {
         if (this._index === this.zoomImgsAll.length - 1) { //is Flip hide
           document.querySelector('.flip-next').style.display = 'none';
           document.querySelector('.flip-prev').style.display = 'block';
