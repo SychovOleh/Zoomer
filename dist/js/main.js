@@ -5,6 +5,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 (function () {
+
   var mobileAndTabletcheck = function mobileAndTabletcheck() {
     //https://stackoverflow.com/questions/11381673/detecting-a-mobile-browser
     var check = false;
@@ -13,6 +14,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     })(navigator.userAgent || navigator.vendor || window.opera);
     return check;
   };
+
   var zoomerBuildDom = function zoomerBuildDom(littleImgClass) {
     var nodeInsert = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'body';
 
@@ -32,6 +34,76 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     });
 
     $(nodeInsert).append($fixedImgWrap);
+  };
+
+  var swipedetect = function swipedetect(el, callback) {
+    //www.javascriptkit.com/javatutors/touchevents2.shtml
+    var touchsurface = el,
+        swipedir = void 0,
+        startX = void 0,
+        startY = void 0,
+        distX = void 0,
+        distY = void 0,
+        threshold = 150,
+        //required min distance traveled to be considered swipe
+    restraint = 100,
+        // maximum distance allowed at the same time in perpendicular direction
+    allowedTime = 300,
+        // maximum time allowed to travel that distance
+    elapsedTime = void 0,
+        startTime = void 0,
+        handleswipe = callback || function (swipedir) {};
+    touchsurface.addEventListener('touchstart', function (e) {
+      var touchobj = e.changedTouches[0];
+      swipedir = 'none';
+      dist = 0;
+      startX = touchobj.pageX;
+      startY = touchobj.pageY;
+      startTime = new Date().getTime(); // record time when finger first makes contact with surface
+      e.preventDefault();
+    }, false);
+
+    touchsurface.addEventListener('touchmove', function (e) {
+      e.preventDefault(); // prevent scrolling when inside DIV
+    }, false);
+
+    touchsurface.addEventListener('touchend', function (e) {
+      var touchobj = e.changedTouches[0];
+      distX = touchobj.pageX - startX; // get horizontal dist traveled by finger while in contact with surface
+      distY = touchobj.pageY - startY; // get vertical dist traveled by finger while in contact with surface
+      elapsedTime = new Date().getTime() - startTime; // get time elapsed
+      if (elapsedTime <= allowedTime) {
+        // first condition for awipe met
+        if (Math.abs(distX) >= threshold && Math.abs(distY) <= restraint) {
+          // 2nd condition for horizontal swipe met
+          swipedir = distX < 0 ? 'left' : 'right'; // if dist traveled is negative, it indicates left swipe
+        } else if (Math.abs(distY) >= threshold && Math.abs(distX) <= restraint) {
+          // 2nd condition for vertical swipe met
+          swipedir = distY < 0 ? 'up' : 'down'; // if dist traveled is negative, it indicates up swipe
+        }
+      }
+      handleswipe(swipedir);
+      e.preventDefault();
+    }, false);
+  };
+
+  // return swipedetect(this.zoomImgWrapMain, function(swipedir) {
+  //   // swipedir contains either "none", "left", "right", "top", or "down"
+  //   return swipedir
+  // })
+
+  var scroll = {
+    disableScroll: function disableScroll() {
+      if ($(document).height() > $(window).height()) {
+        var scrollTop = $('html').scrollTop() ? $('html').scrollTop() : $('body').scrollTop();
+        $('html').addClass('noscroll').css('top', -scrollTop);
+      }
+    },
+    enableScroll: function enableScroll() {
+      var scrollTop = parseInt($('html').css('top'), 10);
+      $('html').removeClass('noscroll');
+      $('html,body').scrollTop(-scrollTop);
+    }
   };
 
   var Zoomer = function () {
@@ -55,20 +127,77 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       $(smallImgCol).click(function () {
         _this.clickOpenZoomImg(this);
       });
-      if (!mobileAndTabletcheck) {
-        $('.flip').click(function () {
-          _this.clickNextImg(this);
-        });
-      }
       $('.icon-close-in').click(function () {
         _this.closeImg(this);
       });
       $(window).resize(function () {
         _this.onResize();
       });
+      if (!mobileAndTabletcheck()) {
+        $('.flip').click(function () {
+          _this.clickNextImg(this);
+        });
+      } else {
+        swipedetect(this.zoomImgWrapMain, this.clickNextImg());
+      }
     }
 
     _createClass(Zoomer, [{
+      key: 'clickNextImg',
+      value: function clickNextImg(target) {
+        this.isPrevSlideRendered();
+
+        if (!mobileAndTabletcheck()) {
+          $('.flip').css('display', 'block');
+        }
+
+        this.nextIndex;
+        var isNextSlide = false;
+
+        if (!mobileAndTabletcheck()) {
+          if (target.classList.contains('flip-next')) {
+            this.nextIndex = this._index + 1;
+            isNextSlide = true;
+          } else {
+            this.nextIndex = this._index - 1;
+          }
+        } else if (swipedir === 'left') {
+          this.nextIndex = this._index + 1;
+          isNextSlide = true;
+        } else if (swipedir === 'right') {
+          this.nextIndex = this._index - 1;
+        }
+
+        this.curSlide = this.zoomImgBack.querySelector('[data-id-item="' + this._index + '"]');
+        this.nextSlide = this.zoomImgBack.querySelector('[data-id-item="' + this.nextIndex + '"]');
+
+        this.isSlideLeafing = true;
+        this.initSizeImg(this.nextSlide);
+
+        this._index = this.nextIndex;
+
+        if (!mobileAndTabletcheck()) {
+          if (this.nextIndex === this.zoomImgsAll.length - 1) {
+            document.querySelector('.flip-next').style.display = 'none';
+          } else if (this.nextIndex === 0) {
+            document.querySelector('.flip-prev').style.display = 'none';
+          }
+        }
+
+        this.curSlide.style.zIndex = '4';
+        this.nextSlide.style.display = 'block';
+
+        this.initSizeImg(this.curSlide);
+
+        this.prevSlide = this.curSlide;
+
+        if (isNextSlide) {
+          this.goNextSlide();
+          return;
+        }
+        this.goPrevSlide();
+      }
+    }, {
       key: 'onResize',
       value: function onResize() {
         this.i = 0;
@@ -112,50 +241,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }
 
         if (!isInitDom && this.isZoomerVisible) {
-          // !!!!!!!!!!
           this.zoomImgBack.style.width = zoomImg.clientWidth - 1 + 'px';
         }
-      }
-    }, {
-      key: 'clickNextImg',
-      value: function clickNextImg(target) {
-        this.isPrevSlideRendered();
-
-        $('.flip').css('display', 'block');
-
-        this.nextIndex;
-        var isNextSlide = false;
-        if (target.classList.contains('flip-next')) {
-          this.nextIndex = this._index + 1;
-          isNextSlide = true;
-        } else {
-          this.nextIndex = this._index - 1;
-        }
-
-        this.curSlide = this.zoomImgBack.querySelector('[data-id-item="' + this._index + '"]');
-        this.nextSlide = this.zoomImgBack.querySelector('[data-id-item="' + this.nextIndex + '"]');
-
-        this.isSlideLeafing = true;
-        this.initSizeImg(this.nextSlide);
-
-        this._index = this.nextIndex;
-        if (this.nextIndex === this.zoomImgsAll.length - 1) {
-          document.querySelector('.flip-next').style.display = 'none';
-        } else if (this.nextIndex === 0) {
-          document.querySelector('.flip-prev').style.display = 'none';
-        }
-        this.curSlide.style.zIndex = '4';
-        this.nextSlide.style.display = 'block';
-
-        this.initSizeImg(this.curSlide);
-
-        this.prevSlide = this.curSlide;
-
-        if (isNextSlide) {
-          this.goNextSlide();
-          return;
-        }
-        this.goPrevSlide();
       }
     }, {
       key: 'getRender',
@@ -192,6 +279,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     }, {
       key: 'clickOpenZoomImg',
       value: function clickOpenZoomImg(target) {
+        scroll.disableScroll();
         this._index = Number(target.getAttribute('data-id'));
 
         for (var i = 0; i < this.zoomImgsAll.length; i += 1) {
@@ -203,15 +291,19 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           }
         }
 
-        if (this._index === this.zoomImgsAll.length - 1) {
-          //is Flip hide
-          document.querySelector('.flip-next').style.display = 'none';
-          document.querySelector('.flip-prev').style.display = 'block';
-        } else if (this._index === 0) {
-          document.querySelector('.flip-prev').style.display = 'none';
-          document.querySelector('.flip-next').style.display = 'block';
+        if (!mobileAndTabletcheck()) {
+          if (this._index === this.zoomImgsAll.length - 1) {
+            //is Flip hide
+            document.querySelector('.flip-next').style.display = 'none';
+            document.querySelector('.flip-prev').style.display = 'block';
+          } else if (this._index === 0) {
+            document.querySelector('.flip-prev').style.display = 'none';
+            document.querySelector('.flip-next').style.display = 'block';
+          } else {
+            $('.flip').css('display', 'block');
+          }
         } else {
-          $('.flip').css('display', 'block');
+          $('.flip').css('display', 'none');
         }
 
         this.curSlide = this.zoomImgBack.querySelector('[data-id-item="' + this._index + '"]');
@@ -317,6 +409,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         this.isPrevSlideRendered();
         this.isSlideLeafing = false;
+        scroll.enableScroll();
       }
     }, {
       key: 'initSmallImgWidth',
@@ -338,6 +431,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   window.mobileAndTabletcheck = mobileAndTabletcheck;
   window.zoomerBuildDom = zoomerBuildDom;
   window.Zoomer = Zoomer;
+  window.swipedetect = swipedetect;
 })();
 
 $(function () {
@@ -345,8 +439,8 @@ $(function () {
   $(window).on('load', function () {
     var zoomer = new Zoomer('.pane__img');
     window.zoomer = zoomer;
-    setTimeout(function () {
-      $('body').addClass('loaded'); //Preloader
-    }, 500);
+
+    //Preloader
+    $('body').addClass('loaded');
   });
 });
