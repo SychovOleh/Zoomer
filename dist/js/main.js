@@ -54,8 +54,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
       var _this = this;
       this.isMobile = mobileAndTabletcheck();
-      this.initSmallImgHeight();
       this.oldIndex;
+      this.initSmallImgWidth();
       this.smallImgCol = smallImgCol;
       this._currentFixedImgIndex;
       this.isSlideLeafing = false;
@@ -98,6 +98,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     }, {
       key: 'onSwipe',
       value: function onSwipe(swipedir) {
+        console.log(swipedir);
         this.clickNextImg(swipedir);
       }
     }, {
@@ -123,7 +124,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         touchsurface.addEventListener('touchstart', function (e) {
           var touchobj = e.changedTouches[0];
           swipedir = 'none';
-          // dist = 0 
+          // dist = 0
           startX = touchobj.pageX;
           startY = touchobj.pageY;
           startTime = new Date().getTime(); // record time when finger first makes contact with surface
@@ -233,7 +234,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             this.initSizeImg(this.curSlide);
           }
         } else {
-          this.initSmallImgHeight();
+          this.initSmallImgWidth();
         }
       }
     }, {
@@ -244,7 +245,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           var naturalWidth = $(zoomImg)[0].naturalWidth;
           $(zoomImg).css({ 'max-height': naturalHeight, 'max-width': naturalWidth });
         }
-        if (!isInitDom) {}
+        if (!isInitDom) {
+          // debugger
+        }
         this.viewHeght = $(window).height();
         this.viewWidth = $(window).width();
 
@@ -257,6 +260,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }
 
         this.zoomImgBack.style.width = '100%';
+        // debugger
         if (isHeight) {
           $(zoomImg).css({ 'height': this.viewHeght, 'width': 'auto' });
         } else {
@@ -442,7 +446,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         var viewWidthNow = $(window).width();
         var viewHeighthNow = $(window).height();
         if (viewWidthNow !== this.viewWidthWhenOpen || viewHeighthNow !== this.viewHeightWhenOpen) {
-          this.initSmallImgHeight();
+          this.initSmallImgWidth();
         }
 
         $('.zoom__img-wrap').animate({ opacity: 0 }, 150, false).hide(0);
@@ -452,13 +456,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         scroll.enableScroll();
       }
     }, {
-      key: 'initSmallImgHeight',
-      value: function initSmallImgHeight() {
+      key: 'initSmallImgWidth',
+      value: function initSmallImgWidth() {
         $('.pane__img-outside').each(function (i, el) {
-          $(el).find('.pane__img').css({
-            height: $(el).css('padding-bottom'),
-            backgroundImage: 'url(dist/img/' + (i + 1) + '.jpg)' + '?rnd=' + Math.floor(Math.random() * 1000000000000000) // for solve cach problems 
-          });
+          $(el).find('.pane__img').css('height', $(el).css('padding-bottom'));
         });
       }
     }, {

@@ -43,8 +43,8 @@
     constructor(smallImgCol) {
       let _this = this;
       this.isMobile = mobileAndTabletcheck();
-      this.initSmallImgHeight()
       this.oldIndex;
+      this.initSmallImgWidth()
       this.smallImgCol = smallImgCol;
       this._currentFixedImgIndex;
       this.isSlideLeafing = false;
@@ -76,6 +76,7 @@
     }
 
     onSwipe(swipedir) {
+      console.log(swipedir)
       this.clickNextImg(swipedir)
     }
 
@@ -96,7 +97,7 @@
       touchsurface.addEventListener('touchstart', function(e) {
         var touchobj = e.changedTouches[0]
         swipedir = 'none'
-          // dist = 0 
+          // dist = 0
         startX = touchobj.pageX
         startY = touchobj.pageY
         startTime = new Date().getTime() // record time when finger first makes contact with surface
@@ -197,7 +198,7 @@
           this.initSizeImg(this.curSlide)
         }
       } else {
-        this.initSmallImgHeight();
+        this.initSmallImgWidth();
       }
     }
 
@@ -207,7 +208,9 @@
         let naturalWidth = $(zoomImg)[0].naturalWidth;
         $(zoomImg).css({ 'max-height': naturalHeight, 'max-width': naturalWidth });
       }
-      if (!isInitDom) {}
+      if (!isInitDom) {
+        // debugger
+      }
       this.viewHeght = $(window).height();
       this.viewWidth = $(window).width();
 
@@ -220,6 +223,7 @@
       }
 
       this.zoomImgBack.style.width = '100%';
+      // debugger
       if (isHeight) {
         $(zoomImg).css({ 'height': this.viewHeght, 'width': 'auto' });
       } else {
@@ -378,7 +382,7 @@
       let viewWidthNow = $(window).width();
       let viewHeighthNow = $(window).height();
       if (viewWidthNow !== this.viewWidthWhenOpen || viewHeighthNow !== this.viewHeightWhenOpen) {
-        this.initSmallImgHeight();
+        this.initSmallImgWidth();
       }
 
       $('.zoom__img-wrap').animate({ opacity: 0 }, 150, false).hide(0);
@@ -388,13 +392,9 @@
       scroll.enableScroll()
     }
 
-    initSmallImgHeight() {
+    initSmallImgWidth() {
       $('.pane__img-outside').each(function(i, el) {
-        $(el).find('.pane__img').css({
-          height: $(el).css('padding-bottom'),
-          backgroundImage: 'url(dist/img/' + (i + 1) + '.jpg)' +
-            '?rnd=' + (Math.floor(Math.random() * 1000000000000000)) // for solve cach problems 
-        })
+        $(el).find('.pane__img').css('height', $(el).css('padding-bottom'))
       })
     }
 
