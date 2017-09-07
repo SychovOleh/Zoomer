@@ -43,8 +43,8 @@
     constructor(smallImgCol) {
       let _this = this;
       this.isMobile = mobileAndTabletcheck();
+      this.initSmallImgHeight()
       this.oldIndex;
-      this.initSmallImgWidth()
       this.smallImgCol = smallImgCol;
       this._currentFixedImgIndex;
       this.isSlideLeafing = false;
@@ -55,6 +55,7 @@
       this.prevSlide = this.zoomImgWrapMain.querySelector('.fictive');
 
       this.initSizesAndPosFixedImgs()();
+      this.isAddFlip();
 
       $(smallImgCol).click(function() { _this.clickOpenZoomImg(this) });
       $('.icon-close-in').click(function() { _this.closeImg(this) });
@@ -62,7 +63,15 @@
       if (!this.isMobile) {
         $('.flip').click(function() { _this.clickNextImg(this) })
       } else {
-        this.swipedetect(this.zoomImgWrapMain, this.onSwipe.bind(this))
+        this.swipedetect(this.zoomImgBack, this.onSwipe.bind(this))
+      }
+    }
+
+    isAddFlip() {
+      if (this.isMobile) {
+        Array.prototype.forEach.call(document.querySelectorAll('.flip'), (el) => {
+          el.style.display = 'none ';
+        })
       }
     }
 
@@ -77,8 +86,8 @@
         startY,
         distX,
         distY,
-        threshold = 150, //required min distance traveled to be considered swipe
-        restraint = 100, // maximum distance allowed at the same time in perpendicular direction
+        threshold = 50, //required min distance traveled to be considered swipe
+        restraint = 120, // maximum distance allowed at the same time in perpendicular direction
         allowedTime = 300, // maximum time allowed to travel that distance
         elapsedTime,
         startTime,
@@ -87,7 +96,7 @@
       touchsurface.addEventListener('touchstart', function(e) {
         var touchobj = e.changedTouches[0]
         swipedir = 'none'
-          // dist = 0
+          // dist = 0 
         startX = touchobj.pageX
         startY = touchobj.pageY
         startTime = new Date().getTime() // record time when finger first makes contact with surface
@@ -188,7 +197,7 @@
           this.initSizeImg(this.curSlide)
         }
       } else {
-        this.initSmallImgWidth();
+        this.initSmallImgHeight();
       }
     }
 
@@ -198,9 +207,7 @@
         let naturalWidth = $(zoomImg)[0].naturalWidth;
         $(zoomImg).css({ 'max-height': naturalHeight, 'max-width': naturalWidth });
       }
-      if (!isInitDom) {
-        // debugger
-      }
+      if (!isInitDom) {}
       this.viewHeght = $(window).height();
       this.viewWidth = $(window).width();
 
@@ -213,7 +220,6 @@
       }
 
       this.zoomImgBack.style.width = '100%';
-      // debugger
       if (isHeight) {
         $(zoomImg).css({ 'height': this.viewHeght, 'width': 'auto' });
       } else {
@@ -305,7 +311,7 @@
         } else {
           if (swipedir === 'right') { return 'noSlide' }
         }
-      } else { $('.flip').css('display', 'block') }
+      } else if (!this.isMobile) { $('.flip').css('display', 'block') }
     }
 
     isPrevSlideRendered() {
@@ -372,7 +378,7 @@
       let viewWidthNow = $(window).width();
       let viewHeighthNow = $(window).height();
       if (viewWidthNow !== this.viewWidthWhenOpen || viewHeighthNow !== this.viewHeightWhenOpen) {
-        this.initSmallImgWidth();
+        this.initSmallImgHeight();
       }
 
       $('.zoom__img-wrap').animate({ opacity: 0 }, 150, false).hide(0);
@@ -382,9 +388,13 @@
       scroll.enableScroll()
     }
 
-    initSmallImgWidth() {
+    initSmallImgHeight() {
       $('.pane__img-outside').each(function(i, el) {
-        $(el).find('.pane__img').css('height', $(el).css('padding-bottom'))
+        $(el).find('.pane__img').css({
+          height: $(el).css('padding-bottom'),
+          backgroundImage: 'url(dist/img/' + (i + 1) + '.jpg)' +
+            '?rnd=' + (Math.floor(Math.random() * 1000000000000000)) // for solve cach problems 
+        })
       })
     }
 

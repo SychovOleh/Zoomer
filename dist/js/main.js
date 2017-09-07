@@ -54,8 +54,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
       var _this = this;
       this.isMobile = mobileAndTabletcheck();
+      this.initSmallImgHeight();
       this.oldIndex;
-      this.initSmallImgWidth();
       this.smallImgCol = smallImgCol;
       this._currentFixedImgIndex;
       this.isSlideLeafing = false;
@@ -66,6 +66,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       this.prevSlide = this.zoomImgWrapMain.querySelector('.fictive');
 
       this.initSizesAndPosFixedImgs()();
+      this.isAddFlip();
 
       $(smallImgCol).click(function () {
         _this.clickOpenZoomImg(this);
@@ -81,11 +82,20 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           _this.clickNextImg(this);
         });
       } else {
-        this.swipedetect(this.zoomImgWrapMain, this.onSwipe.bind(this));
+        this.swipedetect(this.zoomImgBack, this.onSwipe.bind(this));
       }
     }
 
     _createClass(Zoomer, [{
+      key: 'isAddFlip',
+      value: function isAddFlip() {
+        if (this.isMobile) {
+          Array.prototype.forEach.call(document.querySelectorAll('.flip'), function (el) {
+            el.style.display = 'none ';
+          });
+        }
+      }
+    }, {
       key: 'onSwipe',
       value: function onSwipe(swipedir) {
         this.clickNextImg(swipedir);
@@ -100,9 +110,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             startY,
             distX,
             distY,
-            threshold = 150,
+            threshold = 50,
             //required min distance traveled to be considered swipe
-        restraint = 100,
+        restraint = 120,
             // maximum distance allowed at the same time in perpendicular direction
         allowedTime = 300,
             // maximum time allowed to travel that distance
@@ -113,7 +123,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         touchsurface.addEventListener('touchstart', function (e) {
           var touchobj = e.changedTouches[0];
           swipedir = 'none';
-          // dist = 0
+          // dist = 0 
           startX = touchobj.pageX;
           startY = touchobj.pageY;
           startTime = new Date().getTime(); // record time when finger first makes contact with surface
@@ -223,7 +233,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             this.initSizeImg(this.curSlide);
           }
         } else {
-          this.initSmallImgWidth();
+          this.initSmallImgHeight();
         }
       }
     }, {
@@ -234,9 +244,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           var naturalWidth = $(zoomImg)[0].naturalWidth;
           $(zoomImg).css({ 'max-height': naturalHeight, 'max-width': naturalWidth });
         }
-        if (!isInitDom) {
-          // debugger
-        }
+        if (!isInitDom) {}
         this.viewHeght = $(window).height();
         this.viewWidth = $(window).width();
 
@@ -249,7 +257,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }
 
         this.zoomImgBack.style.width = '100%';
-        // debugger
         if (isHeight) {
           $(zoomImg).css({ 'height': this.viewHeght, 'width': 'auto' });
         } else {
@@ -352,7 +359,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
               return 'noSlide';
             }
           }
-        } else {
+        } else if (!this.isMobile) {
           $('.flip').css('display', 'block');
         }
       }
@@ -435,7 +442,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         var viewWidthNow = $(window).width();
         var viewHeighthNow = $(window).height();
         if (viewWidthNow !== this.viewWidthWhenOpen || viewHeighthNow !== this.viewHeightWhenOpen) {
-          this.initSmallImgWidth();
+          this.initSmallImgHeight();
         }
 
         $('.zoom__img-wrap').animate({ opacity: 0 }, 150, false).hide(0);
@@ -445,10 +452,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         scroll.enableScroll();
       }
     }, {
-      key: 'initSmallImgWidth',
-      value: function initSmallImgWidth() {
+      key: 'initSmallImgHeight',
+      value: function initSmallImgHeight() {
         $('.pane__img-outside').each(function (i, el) {
-          $(el).find('.pane__img').css('height', $(el).css('padding-bottom'));
+          $(el).find('.pane__img').css({
+            height: $(el).css('padding-bottom'),
+            backgroundImage: 'url(dist/img/' + (i + 1) + '.jpg)' + '?rnd=' + Math.floor(Math.random() * 1000000000000000) // for solve cach problems 
+          });
         });
       }
     }, {
