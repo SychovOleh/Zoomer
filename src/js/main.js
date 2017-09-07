@@ -17,7 +17,7 @@
 
     $(littleImgClass).each((i, el) => {
       $(el).attr('data-id', i) // id to every little img
-      let srcForFixed = $(el).css('background-image').replace(/^\S*zoomer\//, '').replace('")', '');
+      let srcForFixed = $(el).css('background-image').replace(/^\S*zoomer\//, '').replace(/[^dist/img/\d*\.jpg]+/, '');
       let $item = $('<img>').addClass('zoom__img-item').attr('src', srcForFixed)
         .attr('data-id-item', i) // id to every big img;
       $backGround.append($item);
@@ -42,13 +42,12 @@
   class Zoomer {
     constructor(smallImgCol) {
       let _this = this;
+      this.isMobile = mobileAndTabletcheck();
       this.oldIndex;
       this.initSmallImgWidth()
       this.smallImgCol = smallImgCol;
       this._currentFixedImgIndex;
-      this.swipe;
       this.isSlideLeafing = false;
-      this.isMobile = mobileAndTabletcheck();
 
       this.zoomImgWrapMain = document.querySelector('.zoom__img-wrap');
       this.zoomImgBack = document.querySelector('.zoom__img-back');
@@ -60,14 +59,73 @@
       $(smallImgCol).click(function() { _this.clickOpenZoomImg(this) });
       $('.icon-close-in').click(function() { _this.closeImg(this) });
       $(window).resize(function() { _this.onResize() });
-      $('.flip').click(function() { _this.clickNextImg(this) })
+      if (!this.isMobile) {
+        $('.flip').click(function() { _this.clickNextImg(this) })
+      } else {
+        this.swipedetect(this.zoomImgWrapMain, this.onSwipe.bind(this))
+      }
+    }
+
+    onSwipe(swipedir) {
+      this.clickNextImg(swipedir)
+    }
+
+    swipedetect(el, callback) { //www.javascriptkit.com/javatutors/touchevents2.shtml
+      var touchsurface = el,
+        swipedir,
+        startX,
+        startY,
+        distX,
+        distY,
+        threshold = 150, //required min distance traveled to be considered swipe
+        restraint = 100, // maximum distance allowed at the same time in perpendicular direction
+        allowedTime = 300, // maximum time allowed to travel that distance
+        elapsedTime,
+        startTime,
+        handleswipe = callback || function(swipedir) {}
+
+      touchsurface.addEventListener('touchstart', function(e) {
+        var touchobj = e.changedTouches[0]
+        swipedir = 'none'
+          // dist = 0
+        startX = touchobj.pageX
+        startY = touchobj.pageY
+        startTime = new Date().getTime() // record time when finger first makes contact with surface
+        e.preventDefault()
+      }, false)
+
+      touchsurface.addEventListener('touchmove', function(e) {
+        e.preventDefault() // prevent scrolling when inside DIV
+      }, false)
+
+      touchsurface.addEventListener('touchend', function(e) {
+        var touchobj = e.changedTouches[0]
+        distX = touchobj.pageX - startX // get horizontal dist traveled by finger while in contact with surface
+        distY = touchobj.pageY - startY // get vertical dist traveled by finger while in contact with surface
+        elapsedTime = new Date().getTime() - startTime // get time elapsed
+        if (elapsedTime <= allowedTime) { // first condition for awipe met
+          if (Math.abs(distX) >= threshold && Math.abs(distY) <= restraint) { // 2nd condition for horizontal swipe met
+            swipedir = (distX < 0) ? 'left' : 'right' // if dist traveled is negative, it indicates left swipe
+          } else if (Math.abs(distY) >= threshold && Math.abs(distX) <= restraint) { // 2nd condition for vertical swipe met
+            swipedir = (distY < 0) ? 'up' : 'down' // if dist traveled is negative, it indicates up swipe
+          }
+        }
+        handleswipe(swipedir)
+        e.preventDefault()
+      }, false)
     }
 
     clickNextImg(target) {
+      if (typeof target === 'string') { var swipedir = target }
+
       this.isPrevSlideRendered()
 
       if (!this.isMobile) {
         $('.flip').css('display', 'block');
+      } else {
+        if (this.isLastSlide(swipedir) === 'noSlide') {
+          return
+        }
       }
 
       this.nextIndex;
@@ -80,7 +138,14 @@
         } else {
           this.nextIndex = this._index - 1;
         }
-      }
+
+        // mobile 
+      } else if (swipedir === 'left') {
+        this.nextIndex = this._index + 1;
+        isNextSlide = true;
+      } else if (swipedir === 'right') {
+        this.nextIndex = this._index - 1;
+      } else { return }
 
       this.curSlide = this.zoomImgBack.querySelector('[data-id-item="' + this._index + '"]');
       this.nextSlide = this.zoomImgBack.querySelector('[data-id-item="' + this.nextIndex + '"]');
@@ -100,7 +165,6 @@
 
       this.curSlide.style.zIndex = '4';
       this.nextSlide.style.display = 'block';
-
       this.initSizeImg(this.curSlide)
 
       this.prevSlide = this.curSlide;
@@ -134,7 +198,9 @@
         let naturalWidth = $(zoomImg)[0].naturalWidth;
         $(zoomImg).css({ 'max-height': naturalHeight, 'max-width': naturalWidth });
       }
-
+      if (!isInitDom) {
+        // debugger
+      }
       this.viewHeght = $(window).height();
       this.viewWidth = $(window).width();
 
@@ -146,6 +212,8 @@
         isHeight = true;
       }
 
+      this.zoomImgBack.style.width = '100%';
+      // debugger
       if (isHeight) {
         $(zoomImg).css({ 'height': this.viewHeght, 'width': 'auto' });
       } else {
@@ -198,18 +266,7 @@
         }
       }
 
-      if (!this.isMobile) {
-        if (this._index === this.zoomImgsAll.length - 1) { //is Flip hide
-          document.querySelector('.flip-next').style.display = 'none';
-          document.querySelector('.flip-prev').style.display = 'block';
-        } else if (this._index === 0) {
-          document.querySelector('.flip-prev').style.display = 'none';
-          document.querySelector('.flip-next').style.display = 'block';
-        } else {
-          $('.flip').css('display', 'block');
-        }
-      } else { $('.flip').css('display', 'none'); }
-
+      this.isLastSlide(null, true)
 
       this.curSlide = this.zoomImgBack.querySelector('[data-id-item="' + this._index + '"]');
 
@@ -227,6 +284,28 @@
       this.viewHeightWhenOpen = $(window).height()
 
       this.prevSlide = this.zoomImgWrapMain.querySelector('.fictive')
+    }
+
+    isLastSlide(swipedir, isOpen) {
+      if (this.isMobile && isOpen) {
+        $('.flip').css('display', 'none')
+      }
+
+      if (this._index === this.zoomImgsAll.length - 1) { //is Flip hide
+        if (!this.isMobile) {
+          document.querySelector('.flip-next').style.display = 'none';
+          document.querySelector('.flip-prev').style.display = 'block';
+        } else {
+          if (swipedir === 'left') { return 'noSlide' }
+        }
+      } else if (this._index === 0) {
+        if (!this.isMobile) {
+          document.querySelector('.flip-prev').style.display = 'none';
+          document.querySelector('.flip-next').style.display = 'block';
+        } else {
+          if (swipedir === 'right') { return 'noSlide' }
+        }
+      } else { $('.flip').css('display', 'block') }
     }
 
     isPrevSlideRendered() {
