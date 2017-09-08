@@ -283,17 +283,17 @@ body {
     width: 100px;
     height: 100px;
     top: 0;
-    left: 0;
+    right: 0;
     text-align: center;
     cursor: default;
     z-index: 6; }
     .icon-close-in {
       position: static;
       display: inline-block;
-      margin: 35.5px 0;
-      width: 29px;
-      height: 29px;
-      background: no-repeat url(img/icon/left-arrow.svg);
+      margin: 30px 0;
+      width: 40px;
+      height: 40px;
+      background: no-repeat url(img/icon/close.svg);
       z-index: 7;
       opacity: .7; }
       .icon-close-in:hover {
