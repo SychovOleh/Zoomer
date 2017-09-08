@@ -187,7 +187,8 @@ body {
     -o-transition: box-shadow 0.2s linear;
     transition: box-shadow 0.2s linear;
     transition: box-shadow 0.2s linear, -webkit-box-shadow 0.2s linear;
-    position: absolute; }
+    position: absolute;
+    cursor: pointer; }
     .pane__img:hover {
       -webkit-box-shadow: inset 0px 0px 60px 10px rgba(0, 0, 0, 0.6);
       box-shadow: inset 0px 0px 60px 10px rgba(0, 0, 0, 0.6); }
