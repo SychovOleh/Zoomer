@@ -315,7 +315,7 @@
 
     goNextSlide() {
       let newWidth = this.nextSlide.clientWidth;
-      this.nextSlide.style.left = -newWidth;
+      // this.nextSlide.style.left = -newWidth;
 
       $(this.curSlide).finish().animate({ left: -newWidth }, {
         duration: 150,
@@ -342,7 +342,7 @@
 
     goPrevSlide() {
       let newWidth = this.nextSlide.clientWidth;
-      this.nextSlide.style.left = newWidth;
+      // this.nextSlide.style.left = newWidth;
 
       $(this.curSlide).finish().animate({ left: newWidth }, {
         duration: 150,

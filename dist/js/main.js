@@ -379,7 +379,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         var _this3 = this;
 
         var newWidth = this.nextSlide.clientWidth;
-        this.nextSlide.style.left = -newWidth;
+        // this.nextSlide.style.left = -newWidth;
 
         $(this.curSlide).finish().animate({ left: -newWidth }, {
           duration: 150,
@@ -409,7 +409,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         var _this4 = this;
 
         var newWidth = this.nextSlide.clientWidth;
-        this.nextSlide.style.left = newWidth;
+        // this.nextSlide.style.left = newWidth;
 
         $(this.curSlide).finish().animate({ left: newWidth }, {
           duration: 150,
