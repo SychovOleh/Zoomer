@@ -299,7 +299,8 @@ body {
       opacity: .7;
       -webkit-transition: all .3s linear;
       -o-transition: all .3s linear;
-      transition: all .3s linear; }
+      transition: all .3s linear;
+      border-radius: 50%; }
       .icon-close-in:hover {
         opacity: 1;
         -webkit-transform: rotate(180deg);

@@ -160,6 +160,7 @@ body {
       z-index: 7;
       opacity: .7;
       transition: all .3s linear;
+      border-radius: 50%;
       &:hover {
         opacity: 1;
         transform: rotate(180deg);
