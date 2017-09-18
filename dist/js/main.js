@@ -53,9 +53,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       _classCallCheck(this, Zoomer);
 
       var _this = this;
+
       this.isMobile = mobileAndTabletcheck();
       this.oldIndex;
+
       this.initSmallImgWidth();
+
       this.smallImgCol = smallImgCol;
       this._currentFixedImgIndex;
       this.isSlideLeafing = false;
@@ -98,7 +101,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     }, {
       key: 'swipedetect',
       value: function swipedetect(el, callback) {
-        var touchsurface = el;
+        var touchSurface = el;
         var swipedir = void 0,
             startX = void 0,
             startY = void 0,
@@ -106,15 +109,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             distY = void 0,
             elapsedTime = void 0,
             startTime = void 0;
-        var minDist = 50,
-            //required min distance traveled to be considered swipe
-        maxDist = 120,
-            // maximum distance allowed at the same time in perpendicular direction
-        allowedTime = 300,
-            // maximum time allowed to travel that distance
-        handleswipe = callback || function (swipedir) {};
+        var minDist = 50; //required min distance traveled to be considered swipe
+        var maxDist = 120; // maximum distance allowed at the same time in perpendicular direction
+        var allowedTime = 300; // maximum time allowed to travel that distance
+        // let handleswipe = callback || function(swipedir) {}
+        var swipeResult = callback;
 
-        touchsurface.addEventListener('touchstart', function (event) {
+        touchSurface.addEventListener('touchstart', function (event) {
           var touchObj = event.changedTouches[0];
           swipedir = 'none';
 
@@ -124,11 +125,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           event.preventDefault();
         });
 
-        touchsurface.addEventListener('touchmove', function (event) {
+        touchSurface.addEventListener('touchmove', function (event) {
           event.preventDefault(); // prevent scrolling when inside DIV
         });
 
-        touchsurface.addEventListener('touchend', function (event) {
+        touchSurface.addEventListener('touchend', function (event) {
           var touchObj = event.changedTouches[0];
           distX = touchObj.pageX - startX; // get horizontal dist traveled by finger while in contact with surface
           distY = touchObj.pageY - startY; // get vertical dist traveled by finger while in contact with surface
@@ -143,7 +144,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
               swipedir = distY < 0 ? 'up' : 'down'; // if dist traveled is negative, it indicates up swipe
             }
           }
-          handleswipe(swipedir);
+          swipeResult(swipedir);
           event.preventDefault();
         });
       }
@@ -152,7 +153,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       value: function clickNextImg(target) {
         if (typeof target === 'string') {
           var swipedir = target;
-        }
+        };
 
         this.isPrevSlideRendered();
 
@@ -238,9 +239,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           var naturalWidth = $(zoomImg)[0].naturalWidth;
           $(zoomImg).css({ 'max-height': naturalHeight, 'max-width': naturalWidth });
         }
-        if (!isInitDom) {
-          // debugger
-        }
         this.viewHeght = $(window).height();
         this.viewWidth = $(window).width();
 
@@ -253,7 +251,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }
 
         this.zoomImgBack.style.width = '100%';
-        // debugger
+
         if (isHeight) {
           $(zoomImg).css({ 'height': this.viewHeght, 'width': 'auto' });
         } else {
@@ -409,7 +407,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         var _this4 = this;
 
         var newWidth = this.nextSlide.clientWidth;
-        // this.nextSlide.style.left = newWidth;
 
         $(this.curSlide).finish().animate({ left: newWidth }, {
           duration: 150,
@@ -474,7 +471,6 @@ $(function () {
   zoomerBuildDom(document.querySelectorAll('.pane__img'));
   $(window).on('load', function () {
     new Zoomer('.pane__img');
-    // window.zoomer = zoomer;
 
     //**  Preloader */
     $('body').addClass('loaded');
