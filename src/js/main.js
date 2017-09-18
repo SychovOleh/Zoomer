@@ -398,12 +398,11 @@
 
 $(function() {
   zoomerBuildDom(document.querySelectorAll('.pane__img'));
-})
+  $(window).on('load', function() {
+    new Zoomer('.pane__img');
+    // window.zoomer = zoomer;
 
-$(window).on('load', function() {
-  let zoomer = new Zoomer('.pane__img');
-  window.zoomer = zoomer;
-
-  //Preloader
-  $('body').addClass('loaded');
+    //**  Preloader */
+    $('body').addClass('loaded');
+  })
 })

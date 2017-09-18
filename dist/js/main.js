@@ -472,12 +472,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 $(function () {
   zoomerBuildDom(document.querySelectorAll('.pane__img'));
-});
+  $(window).on('load', function () {
+    new Zoomer('.pane__img');
+    // window.zoomer = zoomer;
 
-$(window).on('load', function () {
-  var zoomer = new Zoomer('.pane__img');
-  window.zoomer = zoomer;
-
-  //Preloader
-  $('body').addClass('loaded');
+    //**  Preloader */
+    $('body').addClass('loaded');
+  });
 });
