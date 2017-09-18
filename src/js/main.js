@@ -84,7 +84,8 @@
       const minDist = 50; //required min distance traveled to be considered swipe
       const maxDist = 120; // maximum distance allowed at the same time in perpendicular direction
       const allowedTime = 300; // maximum time allowed to travel that distance
-      let handleswipe = callback || function(swipedir) {}
+      // let handleswipe = callback || function(swipedir) {}
+      let swipeResult = callback;
 
       touchSurface.addEventListener('touchstart', function(event) {
         let touchObj = event.changedTouches[0]
@@ -112,13 +113,13 @@
             swipedir = (distY < 0) ? 'up' : 'down' // if dist traveled is negative, it indicates up swipe
           }
         }
-        handleswipe(swipedir)
+        swipeResult(swipedir)
         event.preventDefault()
       })
     }
 
     clickNextImg(target) {
-      if (typeof target === 'string') { var swipedir = target }
+      if (typeof target === 'string') { var swipedir = target };
 
       this.isPrevSlideRendered()
 
