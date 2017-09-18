@@ -152,6 +152,7 @@
       window.onload = function() {
         setTimeout(() => {
           if (!document.querySelector('body').classList.contains('loaded')) {
+            console.log('Strange bug when page have reloaded')
             document.querySelector('body').classList.add('loaded')
           }
         }, 5000)
