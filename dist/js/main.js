@@ -474,7 +474,7 @@ $(function () {
   zoomerBuildDom(document.querySelectorAll('.pane__img'));
 });
 
-window.addEventListener('load', function () {
+$(window).on('load', function () {
   var zoomer = new Zoomer('.pane__img');
   window.zoomer = zoomer;
 
