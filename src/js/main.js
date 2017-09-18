@@ -42,9 +42,12 @@
   class Zoomer {
     constructor(smallImgCol) {
       let _this = this;
+
       this.isMobile = mobileAndTabletcheck();
       this.oldIndex;
-      this.initSmallImgWidth()
+
+      this.initSmallImgWidth();
+
       this.smallImgCol = smallImgCol;
       this._currentFixedImgIndex;
       this.isSlideLeafing = false;
@@ -76,14 +79,14 @@
     }
 
     swipedetect(el, callback) {
-      let touchsurface = el;
+      let touchSurface = el;
       let swipedir, startX, startY, distX, distY, elapsedTime, startTime;
-      let minDist = 50, //required min distance traveled to be considered swipe
-        maxDist = 120, // maximum distance allowed at the same time in perpendicular direction
-        allowedTime = 300, // maximum time allowed to travel that distance
-        handleswipe = callback || function(swipedir) {}
+      const minDist = 50; //required min distance traveled to be considered swipe
+      const maxDist = 120; // maximum distance allowed at the same time in perpendicular direction
+      const allowedTime = 300; // maximum time allowed to travel that distance
+      let handleswipe = callback || function(swipedir) {}
 
-      touchsurface.addEventListener('touchstart', function(event) {
+      touchSurface.addEventListener('touchstart', function(event) {
         let touchObj = event.changedTouches[0]
         swipedir = 'none'
 
@@ -93,11 +96,11 @@
         event.preventDefault()
       })
 
-      touchsurface.addEventListener('touchmove', function(event) {
+      touchSurface.addEventListener('touchmove', function(event) {
         event.preventDefault() // prevent scrolling when inside DIV
       })
 
-      touchsurface.addEventListener('touchend', function(event) {
+      touchSurface.addEventListener('touchend', function(event) {
         let touchObj = event.changedTouches[0]
         distX = touchObj.pageX - startX // get horizontal dist traveled by finger while in contact with surface
         distY = touchObj.pageY - startY // get vertical dist traveled by finger while in contact with surface
@@ -197,9 +200,6 @@
         let naturalWidth = $(zoomImg)[0].naturalWidth;
         $(zoomImg).css({ 'max-height': naturalHeight, 'max-width': naturalWidth });
       }
-      if (!isInitDom) {
-        // debugger
-      }
       this.viewHeght = $(window).height();
       this.viewWidth = $(window).width();
 
@@ -212,7 +212,7 @@
       }
 
       this.zoomImgBack.style.width = '100%';
-      // debugger
+
       if (isHeight) {
         $(zoomImg).css({ 'height': this.viewHeght, 'width': 'auto' });
       } else {
@@ -342,7 +342,6 @@
 
     goPrevSlide() {
       let newWidth = this.nextSlide.clientWidth;
-      // this.nextSlide.style.left = newWidth;
 
       $(this.curSlide).finish().animate({ left: newWidth }, {
         duration: 150,
@@ -400,7 +399,6 @@ $(function() {
   zoomerBuildDom(document.querySelectorAll('.pane__img'));
   $(window).on('load', function() {
     new Zoomer('.pane__img');
-    // window.zoomer = zoomer;
 
     //**  Preloader */
     $('body').addClass('loaded');
