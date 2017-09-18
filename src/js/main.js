@@ -138,7 +138,7 @@
           this.nextIndex = this._index - 1;
         }
 
-        // mobile 
+        // **mobile 
       } else if (swipedir === 'left') {
         this.nextIndex = this._index + 1;
         isNextSlide = true;
@@ -398,11 +398,11 @@
 
 $(function() {
   zoomerBuildDom(document.querySelectorAll('.pane__img'));
-  $(window).on('load', function() {
+  window.addEventListener('load', function() {
     let zoomer = new Zoomer('.pane__img');
     window.zoomer = zoomer;
 
     //Preloader
-    $('body').addClass('loaded');
+    $('body').addClass('loaded') ;
   })
 })

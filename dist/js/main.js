@@ -175,7 +175,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             this.nextIndex = this._index - 1;
           }
 
-          // mobile 
+          // **mobile 
         } else if (swipedir === 'left') {
           this.nextIndex = this._index + 1;
           isNextSlide = true;
@@ -472,7 +472,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 $(function () {
   zoomerBuildDom(document.querySelectorAll('.pane__img'));
-  $(window).on('load', function () {
+  window.addEventListener('load', function () {
     var zoomer = new Zoomer('.pane__img');
     window.zoomer = zoomer;
 
